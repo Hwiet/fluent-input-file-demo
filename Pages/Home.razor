@@ -25,7 +25,7 @@
 
         <div class="uploaded-file-info">
             <div>
-                <FluentAnchor Appearance="Appearance.Hypertext" Href="#" OnClick="DownloadFileAsync">@File.Name</FluentAnchor>&nbsp;(@($"{Decimal.Divide(File.Size, 1024):N} KB"))
+                <FluentAnchor Appearance="Appearance.Hypertext" Href="#" OnClick="DownloadFileAsync">@File.Name</FluentAnchor>&nbsp;(@($"{Decimal.Divide(File.Data.Length, 1024):N} KB"))
             </div>
             <FluentIcon Value="@(new Icons.Regular.Size20.Dismiss())" Title="Delete attachment" OnClick="ClearFile" />
         </div>

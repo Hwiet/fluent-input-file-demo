@@ -16,7 +16,7 @@ public partial class Home : IAsyncDisposable
 
     private IJSObjectReference? Module { get; set; }
 
-    private FluentInputFileEventArgs? File { get; set; }
+    private FileData? File { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -28,7 +28,10 @@ public partial class Home : IAsyncDisposable
 
     private void OnUpload(FluentInputFileEventArgs args)
     {
-        File = args;
+        var data = new byte[args.Buffer.BytesRead];
+        Array.Copy(args.Buffer.Data, data, args.Buffer.BytesRead);
+
+        File = new FileData(Name: args.Name, Data: data);
     }
 
     // It would be better to show a thumbnail preview for files, but
@@ -38,7 +41,7 @@ public partial class Home : IAsyncDisposable
     {
         if (File != null && Module != null)
         {
-            var fileStream = new MemoryStream(File.Buffer.Data);
+            var fileStream = new MemoryStream(File.Data);
             using var streamRef = new DotNetStreamReference(fileStream);
 
             await Module.InvokeVoidAsync("downloadFileFromStream", File.Name, streamRef);
@@ -58,4 +61,6 @@ public partial class Home : IAsyncDisposable
             GC.SuppressFinalize(this);
         }
     }
+
+    private record FileData(string Name, byte[] Data);
 }
