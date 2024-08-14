@@ -1,8 +1,8 @@
 ﻿.upload {
-    background: var(--neutral-layer-3);
+    background: var(--neutral-layer-2);
     border-radius: calc(var(--control-corner-radius) * 1px);
     display: flex;
-    padding: 8px;
+    padding: 8px 10px;
     align-items: center;
     justify-content: space-between;
 }
@@ -11,6 +11,19 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+    .upload__info {
+        color: var(--neutral-foreground-rest);
+    }
+
+    .upload__info ::deep fluent-anchor::part(control) {
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+.upload__filename {
+    font-weight: 600;
 }
 
 .upload__info--progress {
