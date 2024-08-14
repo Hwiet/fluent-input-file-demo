@@ -9,10 +9,11 @@
         <p>Upload an attachment (optional)</p>
 
         <FluentInputFile Id="file-uploader"
+                         Class="drag-drop-zone"
                          Mode="InputFileMode.Buffer"
                          Accept="image/*,.pdf"
-                         OnFileUploaded="OnUpload"
-                         Style="height: 100px;border: 1px dashed var(--accent-fill-rest);">
+                         OnProgressChange="OnProgressChangeAsync"
+                         OnCompleted="OnCompleted">
             <div class="file-upload-content">
                 <FluentIcon Value="@(new @Icons.Regular.Size20.ArrowUpload())" />
                 <div><label for="file-uploader">Choose a file</label> or drop it here</div>
@@ -23,10 +24,21 @@
     {
         <p>Your attachments:</p>
 
-        <div class="uploaded-file-info">
-            <div>
-                <FluentAnchor Appearance="Appearance.Hypertext" Href="#" OnClick="DownloadFileAsync">@File.Name</FluentAnchor>&nbsp;(@($"{Decimal.Divide(File.Data.Length, 1024):N} KB"))
-            </div>
+        <div class="upload">
+            @if (File.UploadComplete)
+            {
+                <div class="upload__info">
+                    <FluentAnchor Appearance="Appearance.Hypertext" Href="#" OnClick="DownloadFileAsync">@File.Name</FluentAnchor>&nbsp;(@($"{Decimal.Divide(File.Data.Length, 1024):N2} KB"))
+                </div>
+            }
+            else
+            {
+                <div class="upload__info upload__info--progress">
+                    @File.Name
+                    <FluentProgress Min="0" Max="100" Value="Progress" Class="upload__progress" />
+                </div>
+            }
+
             <FluentIcon Value="@(new Icons.Regular.Size20.Dismiss())" Title="Delete attachment" OnClick="ClearFile" />
         </div>
     }
@@ -35,3 +47,7 @@
 <div class="buttons">
     <FluentButton Appearance="Appearance.Accent">Done</FluentButton>
 </div>
+
+@code {
+    private int? Progress => (File == null) ? null : (int)(((double)File.Data.Length / File.Size) * 100D);
+}

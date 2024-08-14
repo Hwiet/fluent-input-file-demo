@@ -1,18 +1,51 @@
-﻿.uploaded-file-info {
-  background: #dddddd;
-  display: flex;
-  padding: 8px;
-  align-items: center;
-  justify-content: space-between;
+﻿.upload {
+    background: var(--neutral-layer-3);
+    border-radius: calc(var(--control-corner-radius) * 1px);
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    justify-content: space-between;
 }
 
+.upload__info {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload__info--progress {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+}
+
+::deep .upload__progress {
+    flex: 1 1 auto;
+    min-width: 100px;
+    max-width: 300px;
+}
+
+::deep .drag-drop-zone {
+    height: 100px;
+    border: 1px dashed var(--accent-fill-rest);
+    border-radius: calc(var(--control-corner-radius) * 1px);
+}
+
+    ::deep .drag-drop-zone label {
+        text-decoration: none;
+    }
+
+    ::deep .drag-drop-zone .inputfile-progress {
+        display: none;
+    }
+
 .file-upload-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .buttons {
-  display: flex;
-  justify-content: end;
+    display: flex;
+    justify-content: end;
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -26,12 +27,30 @@ public partial class Home : IAsyncDisposable
         }
     }
 
-    private void OnUpload(FluentInputFileEventArgs args)
+    private async Task OnProgressChangeAsync(FluentInputFileEventArgs args)
     {
-        var data = new byte[args.Buffer.BytesRead];
-        Array.Copy(args.Buffer.Data, data, args.Buffer.BytesRead);
+        if (File == null)
+        {
+            var bytes = new byte[args.Buffer.BytesRead];
+            Array.Copy(args.Buffer.Data, bytes, args.Buffer.BytesRead);
 
-        File = new FileData(Name: args.Name, Data: data);
+            File = new FileData(name: args.Name, size: args.Size, data: bytes);
+            await Task.Delay(1000);
+        }
+        else
+        {
+            var bytes = File.Data.Concat(args.Buffer.Data[..args.Buffer.BytesRead]).ToArray();
+
+            File.Data = bytes;
+            await Task.Delay(1000);
+        }
+    }
+
+    private void OnCompleted(IEnumerable<FluentInputFileEventArgs> args)
+    {
+        ArgumentNullException.ThrowIfNull(File);
+
+        File.UploadComplete = true;
     }
 
     // It would be better to show a thumbnail preview for files, but
@@ -62,5 +81,20 @@ public partial class Home : IAsyncDisposable
         }
     }
 
-    private record FileData(string Name, byte[] Data);
+    private record FileData
+    {
+        public required string Name { get; init; }
+
+        public required long Size { get; set; }
+
+        public byte[] Data { get; set; } = [];
+
+        public bool UploadComplete { get; set; } = false;
+
+        [SetsRequiredMembers]
+        public FileData(string name, long size, byte[] data)
+        {
+            Name = name; Size = size; Data = data;
+        }
+    }
 }
