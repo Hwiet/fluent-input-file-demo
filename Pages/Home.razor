@@ -1,7 +1,37 @@
 ﻿@page "/"
+@implements IAsyncDisposable
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div style="margin-bottom: 24px">
+    @if (File == null)
+    {
+        <p>Upload an attachment (optional)</p>
 
-Welcome to your new Fluent Blazor app.
+        <FluentInputFile Id="file-uploader"
+                         Mode="InputFileMode.Buffer"
+                         Accept="image/*,.pdf"
+                         OnFileUploaded="OnUpload"
+                         Style="height: 100px;border: 1px dashed var(--accent-fill-rest);">
+            <div class="file-upload-content">
+                <FluentIcon Value="@(new @Icons.Regular.Size20.ArrowUpload())" />
+                <div><label for="file-uploader">Choose a file</label> or drop it here</div>
+            </div>
+        </FluentInputFile>
+    }
+    else
+    {
+        <p>Your attachments:</p>
+
+        <div class="uploaded-file-info">
+            <div>
+                <FluentAnchor Appearance="Appearance.Hypertext" Href="#" OnClick="DownloadFileAsync">@File.Name</FluentAnchor>&nbsp;(@($"{Decimal.Divide(File.Size, 1024):N} KB"))
+            </div>
+            <FluentIcon Value="@(new Icons.Regular.Size20.Dismiss())" Title="Delete attachment" OnClick="ClearFile" />
+        </div>
+    }
+</div>
+
+<div class="buttons">
+    <FluentButton Appearance="Appearance.Accent">Done</FluentButton>
+</div>

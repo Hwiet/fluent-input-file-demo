@@ -1,0 +1,18 @@
+﻿.uploaded-file-info {
+  background: #dddddd;
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.file-upload-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: end;
+}
